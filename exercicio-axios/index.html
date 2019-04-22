@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <input type="text" id="idUserGithub">
+    <button id="idBuscarUser" onclick="listRepositories()">Buscar</button>
+
+    <ul id="listaRepo"></ul>
+    
+    <script>
+        var inputElement = document.querySelector('#idUserGithub');
+        var listElement = document.querySelector('#listaRepo');
+
+        //renderiza a lista de repositorios
+        const renderRepositories = repositories => {
+            for(repo of repositories){
+
+                //busca o nome dos repositorios "repo.name"
+                const textElement = document.createTextNode(repo.name);
+                //adiciona em um element li
+                const liElement = document.createElement('li');
+
+                //adiciona o nome do repositorio ao elemento li
+                liElement.appendChild(textElement);
+                //adiciona o elemento li ao elemento ul
+                listElement.appendChild(liElement);
+            }
+        }
+
+        const listRepositories = () => {
+            //pega o valor que esta no input 
+            var user = inputElement.value;
+
+            if(!user) return;
+
+            axios.get(`https://api.github.com/users/${user}/repos`)
+                .then(response => {
+                    renderRepositories(response.data);
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
+    </script>
+</body>
+</html>
